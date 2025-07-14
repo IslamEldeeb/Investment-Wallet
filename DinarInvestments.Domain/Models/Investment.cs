@@ -47,6 +47,7 @@ public class Investment : BaseModel<long>
         TransactionReference = transactionReference;
     }
     
+    // Mocked method to simulate rejection of an investment
     public void Reject()
     {
         if (Status != InvestmentStatus.Pending)

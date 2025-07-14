@@ -10,8 +10,6 @@ public class InvestmentService(
     IInvestorRepository investorRepository,
     IInvestmentOpportunityDomainService investmentOpportunityDomainService) : IInvestmentService
 {
-    // Add Investment 
-
     public async Task AddInvestment(InvestToOpportunityDto input)
     {
         Guard.AssertArgumentNotNull(input, nameof(input));

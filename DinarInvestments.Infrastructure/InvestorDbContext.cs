@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DinarInvestments.Infrastructure;
 
-public class InvestorDbContext : DbContext
+public class InvestorDbContext(DbContextOptions<InvestorDbContext> options) : DbContext(options)
 {
     public DbSet<InvestmentOpportunity> InvestmentOpportunities { get; set; }
 
@@ -14,11 +14,6 @@ public class InvestorDbContext : DbContext
 
     public DbSet<Transaction> Transactions { get; set; }
 
-    public InvestorDbContext(DbContextOptions<InvestorDbContext> options)
-        : base(options)
-    {
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new InvestorConfiguration());
@@ -27,14 +22,6 @@ public class InvestorDbContext : DbContext
         modelBuilder.ApplyConfiguration(new TransactionConfiguration());
         modelBuilder.ApplyConfiguration(new WalletConfiguration());
 
-       
-        
-        modelBuilder.Entity<Wallet>()
-            .HasIndex(w => new { w.InvestorId, w.Type })
-            .IsUnique()
-            .HasDatabaseName("IX_Wallets_InvestorId_Type");
-        
-        
         SeedData(modelBuilder);
 
         base.OnModelCreating(modelBuilder);

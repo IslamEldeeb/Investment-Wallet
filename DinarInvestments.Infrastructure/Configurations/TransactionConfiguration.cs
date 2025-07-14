@@ -31,8 +31,6 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
             .HasForeignKey(t => t.ToWalletId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        
-        
         builder.Property(t => t.Amount)
             .IsRequired()
             .HasColumnType("decimal(18,2)");

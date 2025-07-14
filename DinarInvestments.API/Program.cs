@@ -23,10 +23,6 @@ builder.Services.TryAddTransient<IInvestorRepository, InvestorRepository>();
 builder.Services.TryAddTransient<IInvestmentOpportunityDomainService, InvestmentOpportunityDomainService>();
 
 
-
-
-
-
 // Configure Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

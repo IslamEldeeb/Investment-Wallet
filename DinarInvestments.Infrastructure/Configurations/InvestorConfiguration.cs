@@ -11,12 +11,12 @@ public class InvestorConfiguration : IEntityTypeConfiguration<Investor>
         builder.Property(i => i.Id).UseIdentityColumn().ValueGeneratedOnAdd();
 
         builder.Property(i => i.Name).IsRequired().HasMaxLength(100);
+        
         builder.Property(i => i.Email).IsRequired().HasMaxLength(100);
 
         builder.HasMany(i => i.Wallets)
             .WithOne()
             .HasForeignKey(w => w.InvestorId);
-
 
         builder.HasMany(i => i.Investments)
             .WithOne()

@@ -54,7 +54,7 @@ public class InvestorService(IInvestorRepository investorRepository)
             throw new InvalidOperationException($"Investor with ID {input.InvestorId} not found.");
 
         investor.FundMainWallet(input.Amount, input.CorrelationId);
-        // investorRepository.Update(investor);
+        
         await investorRepository.SaveChangesAsync();
     }
 

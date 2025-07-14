@@ -9,7 +9,6 @@ public class InvestmentOpportunityConfiguration : IEntityTypeConfiguration<Inves
     public void Configure(EntityTypeBuilder<InvestmentOpportunity> builder)
     {
         builder.Property(i => i.Id).UseIdentityColumn();
-
         builder.Property(o => o.Name).IsRequired().HasMaxLength(100);
         builder.Property(o => o.MinimumInvestmentAmount).IsRequired();
     }
