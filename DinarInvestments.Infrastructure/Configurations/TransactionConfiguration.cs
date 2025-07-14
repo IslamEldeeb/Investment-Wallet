@@ -10,11 +10,22 @@ namespace DinarInvestments.Infrastructure.Configurations
         {
             builder.Property(i => i.Id).UseIdentityColumn();
 
+            builder.Property(t => t.InvestorId)
+                .IsRequired();
+            
+
+
             builder.Property(t => t.FromWalletId)
                 .IsRequired();
+            builder.HasOne<Wallet>()
+                .WithMany()
+                .HasForeignKey(t => t.FromWalletId);
 
             builder.Property(t => t.ToWalletId)
                 .IsRequired();
+            builder.HasOne<Wallet>()
+                .WithMany()
+                .HasForeignKey(t => t.ToWalletId);
 
             builder.Property(t => t.Amount)
                 .IsRequired()
@@ -24,8 +35,12 @@ namespace DinarInvestments.Infrastructure.Configurations
                 .IsRequired()
                 .HasMaxLength(500);
 
-            builder.Property(t => t.TransactionDate)
+            builder.Property(t => t.CreationDate)
                 .IsRequired();
+
+            builder.Property(t => t.TransactionCode)
+                .IsRequired()
+                .HasMaxLength(20);
         }
     }
 }

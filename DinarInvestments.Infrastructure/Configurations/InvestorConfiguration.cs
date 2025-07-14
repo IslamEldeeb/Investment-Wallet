@@ -18,8 +18,11 @@ namespace DinarInvestments.Infrastructure.Configurations
 
             builder.HasMany(i => i.Investments)
                 .WithOne()
-                .HasForeignKey(inv => inv.InvestorId);
+                .HasForeignKey(i => i.InvestorId);
+
+            builder.HasMany(i => i.Transactions)
+                .WithOne()
+                .HasForeignKey(i => i.InvestorId);
         }
     }
 }
-

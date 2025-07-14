@@ -8,6 +8,15 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DinarInvestments.Application\DinarInvestments.Application.csproj" />
+    <ProjectReference Include="..\DinarInvestments.Infrastructure\DinarInvestments.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

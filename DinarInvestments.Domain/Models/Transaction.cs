@@ -2,16 +2,17 @@ using DinarInvestments.Domain.Shared;
 
 namespace DinarInvestments.Domain.Models
 {
-    public class Transaction : AggregateRoot
+    public class Transaction : ModelBase
     {
-        public Guid FromWalletId { get; private set; }
-        public Guid ToWalletId { get; private set; }
+        public long InvestorId { get; private set; }
+        public long FromWalletId { get; private set; }
+        public long ToWalletId { get; private set; }
         public decimal Amount { get; private set; }
         public string Description { get; private set; }
-        public DateTime TransactionDate { get; private set; }
+        public string TransactionCode { get; set; }
 
-        private Transaction() { }
-
-       
+        private Transaction()
+        {
+        }
     }
 }

@@ -1,11 +1,12 @@
-namespace DinarInvestments.Domain.Models.ValueObjects
+namespace DinarInvestments.Domain.Models
 {
-    public class Wallet
+    public class Wallet 
     {
-        public Guid InvestorId { get; private set; }
+        public long Id { get; set; }
+        public long InvestorId { get; private set; }
         public decimal Balance { get; private set; }
 
-        public Wallet(Guid investorId)
+        public Wallet(long investorId)
         {
             InvestorId = investorId;
             Balance = 0;

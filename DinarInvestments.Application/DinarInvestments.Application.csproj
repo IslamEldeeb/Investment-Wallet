@@ -5,4 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DinarInvestments.Domain\DinarInvestments.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,3 +1,7 @@
+using System.Reflection;
+using DinarInvestments.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
 namespace DinarInvestments.API.Helpers;
 
 public static class ServiceCollectionExtensions
@@ -49,6 +53,7 @@ public static class ServiceCollectionExtensions
             }
         }
     }
+
 }
 
 public interface ISingletonDependency

@@ -4,18 +4,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DinarInvestments.Infrastructure
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+    public class AppDbContext : DbContext
     {
         public DbSet<InvestmentOpportunity> InvestmentOpportunities { get; set; }
+
+        public DbSet<Investment> Investments { get; set; }
 
         public DbSet<Investor> Investors { get; set; }
 
         public DbSet<Transaction> Transactions { get; set; }
 
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new InvestorConfiguration());
             modelBuilder.ApplyConfiguration(new InvestmentOpportunityConfiguration());
+            modelBuilder.ApplyConfiguration(new InvestmentConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
 
             SeedData(modelBuilder);
@@ -27,14 +35,17 @@ namespace DinarInvestments.Infrastructure
         {
             modelBuilder.Entity<InvestmentOpportunity>().HasData(
                 new InvestmentOpportunity(
+                    1,
                     "Real Estate Fund",
                     1000
                 ),
                 new InvestmentOpportunity(
+                    2,
                     "Tech Growth Fund",
                     500
                 ),
                 new InvestmentOpportunity(
+                    3,
                     "SME Sukuk",
                     250
                 )
