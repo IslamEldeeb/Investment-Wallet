@@ -1,6 +1,6 @@
-# DinarInvestments API
+# Dinar Investments API
 
-DinarInvestments is a RESTful API for managing investors, investments, and wallets.
+Dinar Investments is a RESTful API for managing investors, investments, and wallets.
 
 ## Getting Started
 
