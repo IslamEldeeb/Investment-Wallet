@@ -9,7 +9,6 @@ public class Investment : BaseModel<long>
     public int InvestmentOpportunityId { get; private set; }
     public decimal Amount { get; private set; }
     public InvestmentStatus Status { get; private set; }
-
     public string TransactionReference { get; set; }
 
     private Investment()
@@ -22,6 +21,7 @@ public class Investment : BaseModel<long>
         InvestmentOpportunityId = investmentOpportunityId;
         Amount = amount;
         Status = InvestmentStatus.Pending;
+        CreationDate = DateTime.UtcNow;
     }
 
     public static Investment Create(long investorId, int investmentOpportunityId, decimal amount)

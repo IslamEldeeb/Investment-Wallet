@@ -25,6 +25,17 @@ public static class Guard
             throw new ArgumentException(message);
         }
     }
+    
+    public static void AssertArgumentNotLessThanZero<T>(T? value, string argumentName, string message = null)
+        where T : struct, IComparable
+    {
+        AssertArgumentNotNull(value, argumentName);
+        if (value.Value.CompareTo(default(T)) < 0)
+        {
+            message ??= $"{argumentName} should be greater than zero.";
+            throw new ArgumentException(message);
+        }
+    }
 
     public static void AssertArgumentEquals<T>(T object1, T object2, string message = null)
     {
@@ -43,7 +54,7 @@ public static class Guard
             throw new InvalidOperationException(message);
         }
     }
-    
+
     public static void AssertEnumValue<TEnum>(TEnum value, string argumentName) where TEnum : struct, Enum
     {
         if (!Enum.IsDefined(typeof(TEnum), value))

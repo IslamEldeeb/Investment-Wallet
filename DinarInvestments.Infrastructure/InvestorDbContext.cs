@@ -25,7 +25,16 @@ public class InvestorDbContext : DbContext
         modelBuilder.ApplyConfiguration(new InvestmentOpportunityConfiguration());
         modelBuilder.ApplyConfiguration(new InvestmentConfiguration());
         modelBuilder.ApplyConfiguration(new TransactionConfiguration());
+        modelBuilder.ApplyConfiguration(new WalletConfiguration());
 
+       
+        
+        modelBuilder.Entity<Wallet>()
+            .HasIndex(w => new { w.InvestorId, w.Type })
+            .IsUnique()
+            .HasDatabaseName("IX_Wallets_InvestorId_Type");
+        
+        
         SeedData(modelBuilder);
 
         base.OnModelCreating(modelBuilder);

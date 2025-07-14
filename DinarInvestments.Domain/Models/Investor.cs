@@ -33,9 +33,18 @@ public class Investor : BaseModel<long>
         return new Investor(name, email);
     }
 
+    public void UpdateInfo(string name, string email)
+    {
+        Guard.AssertArgumentNotNullOrEmptyOrWhitespace(name, nameof(name));
+        Guard.AssertArgumentNotNullOrEmptyOrWhitespace(email, nameof(email));
+
+        Name = name;
+        Email = email;
+    }
+
     #region Wallet Operations
 
-    public Wallet GetOrAddWallet(WalletType walletType)
+    private Wallet GetOrAddWallet(WalletType walletType)
     {
         Guard.AssertEnumValue(walletType, nameof(walletType));
 
@@ -52,22 +61,22 @@ public class Investor : BaseModel<long>
         return newWallet;
     }
 
-    public string FundMainWallet(decimal amount)
+    public string FundMainWallet(decimal amount, string correlationId)
     {
         Guard.AssertArgumentNotLessThanOrEqualToZero<decimal>(amount, nameof(amount));
 
         var fromWallet = GetOrAddWallet(WalletType.Funding);
         var toWallet = GetOrAddWallet(WalletType.Main);
-        return AddTransaction(fromWallet, toWallet, amount, "Funding main wallet");
+        return AddTransaction(fromWallet, toWallet, amount, "Funding main wallet", correlationId);
     }
 
-    private string FundInvestmentWallet(decimal amount, string description)
+    private string FundInvestmentWallet(decimal amount, string description, string correlationId)
     {
         Guard.AssertArgumentNotLessThanOrEqualToZero<decimal>(amount, nameof(amount));
 
         var fromWallet = GetOrAddWallet(WalletType.Main);
         var toWallet = GetOrAddWallet(WalletType.Investment);
-        return AddTransaction(fromWallet, toWallet, amount, description);
+        return AddTransaction(fromWallet, toWallet, amount, description, correlationId);
     }
 
     #endregion
@@ -75,7 +84,8 @@ public class Investor : BaseModel<long>
 
     #region Transactions
 
-    private string AddTransaction(Wallet fromWallet, Wallet toWallet, decimal amount, string description)
+    private string AddTransaction(Wallet fromWallet, Wallet toWallet, decimal amount, string description,
+        string correlationId)
     {
         Guard.AssertArgumentNotNull(fromWallet, nameof(fromWallet));
         Guard.AssertArgumentNotNull(toWallet, nameof(toWallet));
@@ -87,7 +97,7 @@ public class Investor : BaseModel<long>
             throw new InvalidOperationException("Transaction wallets do not belong to this investor.");
         }
 
-        if (fromWallet.Balance < amount)
+        if (fromWallet.Type == WalletType.Main && fromWallet.Balance < amount)
         {
             throw new InvalidOperationException("Insufficient balance in the from wallet.");
         }
@@ -95,7 +105,7 @@ public class Investor : BaseModel<long>
         fromWallet.Deduct(amount);
         toWallet.Fund(amount);
 
-        var transaction = Transaction.Create(Id, fromWallet.Id, toWallet.Id, amount, description);
+        var transaction = Transaction.Create(Id, fromWallet, toWallet, amount, description, correlationId);
         AddTransaction(transaction);
 
         return transaction.TransactionReference;
@@ -117,28 +127,17 @@ public class Investor : BaseModel<long>
 
     public async Task AddInvestment(int investmentOpportunityId, decimal amount,
         IInvestmentOpportunityDomainService investmentOpportunityDomainService)
-
     {
         Guard.AssertArgumentNotLessThanOrEqualToZero<int>(investmentOpportunityId, nameof(investmentOpportunityId));
         Guard.AssertArgumentNotLessThanOrEqualToZero<decimal>(amount, nameof(amount));
         Guard.AssertArgumentNotNull(investmentOpportunityDomainService, nameof(investmentOpportunityDomainService));
 
-        if (!CanInvest(amount))
-        {
-            throw new InvalidOperationException("Insufficient balance in main wallet to invest.");
-        }
-
-        if (!await investmentOpportunityDomainService.EnsureInvestmentAmountMeetsMinimumAsync(investmentOpportunityId,
-                amount))
-        {
-            throw new InvalidOperationException(
-                "Investment amount does not meet the minimum requirement for this opportunity.");
-        }
+        await CanInvest(investmentOpportunityId, amount, investmentOpportunityDomainService);
 
         var investment = Investment.Create(Id, investmentOpportunityId, amount);
 
-        var trxRef = FundInvestmentWallet(amount, "Funding investment wallet for investment opportunity");
-
+        var trxRef = FundInvestmentWallet(amount, "Funding investment wallet for investment opportunity",
+            $"{investmentOpportunityId}-{Id}-{DateTime.UtcNow:yyyyMMddHHmmss}");
         investment.Approve(trxRef);
 
         AddInvestment(investment);
@@ -153,12 +152,17 @@ public class Investor : BaseModel<long>
         Investments.Add(investment);
     }
 
-    private bool CanInvest(decimal amount)
+    private async Task CanInvest(int investmentOpportunityId, decimal amount,
+        IInvestmentOpportunityDomainService investmentOpportunityDomainService)
     {
         Guard.AssertArgumentNotLessThanOrEqualToZero<decimal>(amount, nameof(amount));
 
         var mainWallet = GetOrAddWallet(WalletType.Main);
-        return mainWallet.Balance >= amount;
+        if (mainWallet.Balance < amount)
+            throw new InvalidOperationException("Insufficient balance in main wallet to invest.");
+
+        await investmentOpportunityDomainService.EnsureInvestmentAmountMeetsMinimumAsync(investmentOpportunityId,
+            amount);
     }
 
     #endregion

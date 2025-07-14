@@ -1,20 +1,25 @@
-
-using DinarInvestments.API.Helpers;
-using DinarInvestments.API.Utilities;
+using DinarInvestments.Application.Services.Implementations;
+using DinarInvestments.Application.Services.Interfaces;
+using DinarInvestments.Domain.Repositories;
 using DinarInvestments.Infrastructure;
+using DinarInvestments.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.Configure<ConfigSettings>(builder.Configuration.GetSection("ConfigSettings"));
-
 builder.Services.AddDbContext<InvestorDbContext>(options =>
     options.UseNpgsql(builder.Configuration["ConnectionString"]));
+
 // Configure Services
-builder.Services.RegisterServicesByConvention();
+builder.Services.TryAddTransient(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+builder.Services.TryAddTransient<IInvestorService, InvestorService>();
+builder.Services.TryAddTransient<IInvestmentService, InvestmentService>();
+builder.Services.TryAddTransient<IInvestorRepository, InvestorRepository>();
+
 
 // Configure Swagger
 builder.Services.AddEndpointsApiExplorer();

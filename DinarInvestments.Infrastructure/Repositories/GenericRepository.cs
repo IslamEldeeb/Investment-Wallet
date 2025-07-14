@@ -20,7 +20,7 @@ public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : 
     {
         return await DbSet.FirstOrDefaultAsync(e => e.Id.Equals(id));
     }
-
+    
     public async Task<IEnumerable<T>> GetAllAsync()
     {
         return await DbSet.ToListAsync();
@@ -33,7 +33,7 @@ public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : 
 
     public void Update(T entity)
     {
-        DbSet.Update(entity);
+        Context.Entry(entity).State = EntityState.Modified;
     }
 
     public async Task SaveChangesAsync()

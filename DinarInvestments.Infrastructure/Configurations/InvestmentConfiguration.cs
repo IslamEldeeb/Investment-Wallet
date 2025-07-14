@@ -8,12 +8,12 @@ public class InvestmentConfiguration : IEntityTypeConfiguration<Investment>
 {
     public void Configure(EntityTypeBuilder<Investment> builder)
     {
-        builder.Property(i => i.Id).UseIdentityColumn();
+        builder.Property(i => i.Id).UseIdentityColumn()
+            .ValueGeneratedOnAdd();
 
         builder.Property(i => i.InvestorId)
             .IsRequired();
              
-
         builder.Property(i => i.InvestmentOpportunityId)
             .IsRequired();
         builder.HasOne<InvestmentOpportunity>()
