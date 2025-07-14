@@ -44,6 +44,22 @@ public class Investor : BaseModel<long>
 
     #region Wallet Operations
 
+    public string FundMainWallet(decimal amount, string correlationId)
+    {
+        Guard.AssertArgumentNotLessThanOrEqualToZero<decimal>(amount, nameof(amount));
+
+        var fromWallet = GetOrAddWallet(WalletType.Funding);
+        var toWallet = GetOrAddWallet(WalletType.Main);
+        return AddTransaction(fromWallet, toWallet, amount, "Funding main wallet", correlationId);
+    }
+
+    public decimal GetMainWalletBalance()
+    {
+        var mainWallet = GetOrAddWallet(WalletType.Main);
+        return mainWallet.Balance;
+    }
+    
+    
     private Wallet GetOrAddWallet(WalletType walletType)
     {
         Guard.AssertEnumValue(walletType, nameof(walletType));
@@ -61,14 +77,6 @@ public class Investor : BaseModel<long>
         return newWallet;
     }
 
-    public string FundMainWallet(decimal amount, string correlationId)
-    {
-        Guard.AssertArgumentNotLessThanOrEqualToZero<decimal>(amount, nameof(amount));
-
-        var fromWallet = GetOrAddWallet(WalletType.Funding);
-        var toWallet = GetOrAddWallet(WalletType.Main);
-        return AddTransaction(fromWallet, toWallet, amount, "Funding main wallet", correlationId);
-    }
 
     private string FundInvestmentWallet(decimal amount, string description, string correlationId)
     {
@@ -79,6 +87,8 @@ public class Investor : BaseModel<long>
         return AddTransaction(fromWallet, toWallet, amount, description, correlationId);
     }
 
+    
+    
     #endregion
 
 

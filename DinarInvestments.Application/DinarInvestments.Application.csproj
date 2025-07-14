@@ -9,8 +9,4 @@
     <ProjectReference Include="..\DinarInvestments.Domain\DinarInvestments.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\Investments\" />
-  </ItemGroup>
-
 </Project>

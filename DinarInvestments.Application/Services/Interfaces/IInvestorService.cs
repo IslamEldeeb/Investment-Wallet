@@ -11,4 +11,6 @@ public interface IInvestorService
 
     Task FundInvestorWallet(FundInvestorWallet input);
 
+    Task<Decimal> GetBalance(long investorId);
+
 }

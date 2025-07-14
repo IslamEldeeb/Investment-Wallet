@@ -1,5 +1,6 @@
 using DinarInvestments.Application.Services.Implementations;
 using DinarInvestments.Application.Services.Interfaces;
+using DinarInvestments.Domain.DomainServices;
 using DinarInvestments.Domain.Repositories;
 using DinarInvestments.Infrastructure;
 using DinarInvestments.Infrastructure.Repositories;
@@ -19,6 +20,11 @@ builder.Services.TryAddTransient(typeof(IGenericRepository<,>), typeof(GenericRe
 builder.Services.TryAddTransient<IInvestorService, InvestorService>();
 builder.Services.TryAddTransient<IInvestmentService, InvestmentService>();
 builder.Services.TryAddTransient<IInvestorRepository, InvestorRepository>();
+builder.Services.TryAddTransient<IInvestmentOpportunityDomainService, InvestmentOpportunityDomainService>();
+
+
+
+
 
 
 // Configure Swagger

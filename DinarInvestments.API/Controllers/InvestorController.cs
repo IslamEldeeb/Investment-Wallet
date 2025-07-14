@@ -16,7 +16,6 @@ public class InvestorController(IInvestorService investorService) : ControllerBa
         return Ok(investors);
     }
 
-
     [HttpPost("create")]
     public async Task<IActionResult> CreateInvestor([FromBody] CreateInvestorDto input)
     {
@@ -30,11 +29,18 @@ public class InvestorController(IInvestorService investorService) : ControllerBa
         await investorService.UpdateInvestor(id, input);
         return Ok(new { Message = "Investor updated successfully." });
     }
-    
+
     [HttpPost("fundWallet")]
     public async Task<IActionResult> FundInvestorWallet([FromBody] FundInvestorWallet input)
     {
         await investorService.FundInvestorWallet(input);
         return Ok(new { Message = "Investor wallet funded successfully." });
+    }
+
+    [HttpGet("balance/{investorId}")]
+    public async Task<IActionResult> GetBalance(long investorId)
+    {
+        var balance = await investorService.GetBalance(investorId);
+        return Ok(new { Balance = balance });
     }
 }

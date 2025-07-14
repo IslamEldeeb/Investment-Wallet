@@ -10,7 +10,6 @@ public class InvestorRepository(InvestorDbContext context)
     public async Task<Investor?> GetInvestorAsync(long id)
     {
         return await DbSet.Include(x => x.Wallets)
-            .Include(x => x.Transactions)
             .AsTracking()
             .FirstOrDefaultAsync(e => e.Id.Equals(id));
     }

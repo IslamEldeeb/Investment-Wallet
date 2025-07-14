@@ -43,7 +43,6 @@ public class InvestorService(IInvestorRepository investorRepository)
         await investorRepository.SaveChangesAsync();
     }
 
-
     public async Task FundInvestorWallet(FundInvestorWallet input)
     {
         Guard.AssertArgumentNotNull(input, nameof(input));
@@ -55,7 +54,18 @@ public class InvestorService(IInvestorRepository investorRepository)
             throw new InvalidOperationException($"Investor with ID {input.InvestorId} not found.");
 
         investor.FundMainWallet(input.Amount, input.CorrelationId);
-       // investorRepository.Update(investor);
+        // investorRepository.Update(investor);
         await investorRepository.SaveChangesAsync();
+    }
+
+    public async Task<Decimal> GetBalance(long investorId)
+    {
+        Guard.AssertArgumentNotLessThanOrEqualToZero<long>(investorId, nameof(investorId));
+
+        var investor = await investorRepository.GetInvestorAsync(investorId);
+        if (investor == null)
+            throw new InvalidOperationException($"Investor with ID {investorId} not found.");
+
+        return investor.GetMainWalletBalance();
     }
 }
