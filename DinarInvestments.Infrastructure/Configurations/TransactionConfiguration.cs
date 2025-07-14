@@ -16,10 +16,23 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
 
         builder.Property(t => t.FromWalletId)
             .IsRequired();
+        
+        builder.HasOne(t => t.FromWallet)
+            .WithMany()
+            .HasForeignKey(t => t.FromWalletId)
+            .OnDelete(DeleteBehavior.NoAction);
+        
 
         builder.Property(t => t.ToWalletId)
             .IsRequired();
+        
+        builder.HasOne(t => t.ToWallet)
+            .WithMany()
+            .HasForeignKey(t => t.ToWalletId)
+            .OnDelete(DeleteBehavior.NoAction);
 
+        
+        
         builder.Property(t => t.Amount)
             .IsRequired()
             .HasColumnType("decimal(18,2)");
