@@ -2,7 +2,7 @@ using DinarInvestments.Domain.Shared;
 
 namespace DinarInvestments.Domain.Models;
 
-public class Transaction : ModelBase
+public class Transaction : BaseModel<long>
 {
     public long InvestorId { get; private init; }
     public Guid FromWalletId { get; private init; }

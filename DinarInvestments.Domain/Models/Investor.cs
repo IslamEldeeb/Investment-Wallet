@@ -3,7 +3,7 @@ using DinarInvestments.Domain.Shared;
 
 namespace DinarInvestments.Domain.Models;
 
-public class Investor : ModelBase
+public class Investor : BaseModel<long>
 {
     public string Name { get; private set; }
 
@@ -115,11 +115,11 @@ public class Investor : ModelBase
 
     #region Investment Operations
 
-    public async Task AddInvestment(long investmentOpportunityId, decimal amount,
+    public async Task AddInvestment(int investmentOpportunityId, decimal amount,
         IInvestmentOpportunityDomainService investmentOpportunityDomainService)
 
     {
-        Guard.AssertArgumentNotLessThanOrEqualToZero<long>(investmentOpportunityId, nameof(investmentOpportunityId));
+        Guard.AssertArgumentNotLessThanOrEqualToZero<int>(investmentOpportunityId, nameof(investmentOpportunityId));
         Guard.AssertArgumentNotLessThanOrEqualToZero<decimal>(amount, nameof(amount));
         Guard.AssertArgumentNotNull(investmentOpportunityDomainService, nameof(investmentOpportunityDomainService));
 

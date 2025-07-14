@@ -3,7 +3,6 @@ using System;
 using DinarInvestments.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,12 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DinarInvestments.Infrastructure.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-    [Migration("20250714184200_Initial")]
-    partial class Initial
+    [DbContext(typeof(InvestorDbContext))]
+    partial class InvestorDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,11 +36,17 @@ namespace DinarInvestments.Infrastructure.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime");
 
-                    b.Property<long>("InvestmentOpportunityId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("InvestmentOpportunityId")
+                        .HasColumnType("integer");
 
                     b.Property<long>("InvestorId")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TransactionReference")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -56,11 +59,11 @@ namespace DinarInvestments.Infrastructure.Migrations
 
             modelBuilder.Entity("DinarInvestments.Domain.Models.InvestmentOpportunity", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp with time zone");
@@ -80,22 +83,22 @@ namespace DinarInvestments.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1L,
-                            CreationDate = new DateTime(2025, 7, 14, 18, 42, 0, 64, DateTimeKind.Utc).AddTicks(4240),
+                            Id = 1,
+                            CreationDate = new DateTime(2025, 7, 14, 19, 52, 1, 463, DateTimeKind.Utc).AddTicks(9540),
                             MinimumInvestmentAmount = 1000m,
                             Name = "Real Estate Fund"
                         },
                         new
                         {
-                            Id = 2L,
-                            CreationDate = new DateTime(2025, 7, 14, 18, 42, 0, 64, DateTimeKind.Utc).AddTicks(5000),
+                            Id = 2,
+                            CreationDate = new DateTime(2025, 7, 14, 19, 52, 1, 464, DateTimeKind.Utc).AddTicks(300),
                             MinimumInvestmentAmount = 500m,
                             Name = "Tech Growth Fund"
                         },
                         new
                         {
-                            Id = 3L,
-                            CreationDate = new DateTime(2025, 7, 14, 18, 42, 0, 64, DateTimeKind.Utc).AddTicks(5000),
+                            Id = 3,
+                            CreationDate = new DateTime(2025, 7, 14, 19, 52, 1, 464, DateTimeKind.Utc).AddTicks(300),
                             MinimumInvestmentAmount = 250m,
                             Name = "SME Sukuk"
                         });
@@ -146,19 +149,19 @@ namespace DinarInvestments.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<long>("FromWalletId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("FromWalletId")
+                        .HasColumnType("uuid");
 
                     b.Property<long>("InvestorId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("ToWalletId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("ToWalletId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("TransactionCode")
+                    b.Property<string>("TransactionReference")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -168,22 +171,27 @@ namespace DinarInvestments.Infrastructure.Migrations
 
                     b.HasIndex("ToWalletId");
 
+                    b.HasIndex("TransactionReference")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Transaction_TransactionReference");
+
                     b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("DinarInvestments.Domain.Models.Wallet", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("numeric");
 
                     b.Property<long>("InvestorId")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

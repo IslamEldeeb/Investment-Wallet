@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 
 builder.Services.Configure<ConfigSettings>(builder.Configuration.GetSection("ConfigSettings"));
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<InvestorDbContext>(options =>
     options.UseNpgsql(builder.Configuration["ConnectionString"]));
 // Configure Services
 builder.Services.RegisterServicesByConvention();

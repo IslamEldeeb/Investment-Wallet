@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DinarInvestments.Infrastructure;
 
-public class AppDbContext : DbContext
+public class InvestorDbContext : DbContext
 {
     public DbSet<InvestmentOpportunity> InvestmentOpportunities { get; set; }
 
@@ -14,7 +14,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Transaction> Transactions { get; set; }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options)
+    public InvestorDbContext(DbContextOptions<InvestorDbContext> options)
         : base(options)
     {
     }

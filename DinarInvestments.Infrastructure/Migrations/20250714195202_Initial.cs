@@ -18,7 +18,7 @@ namespace DinarInvestments.Infrastructure.Migrations
                 name: "InvestmentOpportunities",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     MinimumInvestmentAmount = table.Column<decimal>(type: "numeric", nullable: false),
@@ -51,8 +51,10 @@ namespace DinarInvestments.Infrastructure.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     InvestorId = table.Column<long>(type: "bigint", nullable: false),
-                    InvestmentOpportunityId = table.Column<long>(type: "bigint", nullable: false),
+                    InvestmentOpportunityId = table.Column<int>(type: "integer", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    TransactionReference = table.Column<string>(type: "text", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
@@ -76,10 +78,10 @@ namespace DinarInvestments.Infrastructure.Migrations
                 name: "Wallet",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     InvestorId = table.Column<long>(type: "bigint", nullable: false),
-                    Balance = table.Column<decimal>(type: "numeric", nullable: false)
+                    Balance = table.Column<decimal>(type: "numeric", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,11 +101,11 @@ namespace DinarInvestments.Infrastructure.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     InvestorId = table.Column<long>(type: "bigint", nullable: false),
-                    FromWalletId = table.Column<long>(type: "bigint", nullable: false),
-                    ToWalletId = table.Column<long>(type: "bigint", nullable: false),
+                    FromWalletId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ToWalletId = table.Column<Guid>(type: "uuid", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    TransactionReference = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    TransactionCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -134,9 +136,9 @@ namespace DinarInvestments.Infrastructure.Migrations
                 columns: new[] { "Id", "CreationDate", "MinimumInvestmentAmount", "Name" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2025, 7, 14, 18, 42, 0, 64, DateTimeKind.Utc).AddTicks(4240), 1000m, "Real Estate Fund" },
-                    { 2L, new DateTime(2025, 7, 14, 18, 42, 0, 64, DateTimeKind.Utc).AddTicks(5000), 500m, "Tech Growth Fund" },
-                    { 3L, new DateTime(2025, 7, 14, 18, 42, 0, 64, DateTimeKind.Utc).AddTicks(5000), 250m, "SME Sukuk" }
+                    { 1, new DateTime(2025, 7, 14, 19, 52, 1, 463, DateTimeKind.Utc).AddTicks(9540), 1000m, "Real Estate Fund" },
+                    { 2, new DateTime(2025, 7, 14, 19, 52, 1, 464, DateTimeKind.Utc).AddTicks(300), 500m, "Tech Growth Fund" },
+                    { 3, new DateTime(2025, 7, 14, 19, 52, 1, 464, DateTimeKind.Utc).AddTicks(300), 250m, "SME Sukuk" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -148,6 +150,12 @@ namespace DinarInvestments.Infrastructure.Migrations
                 name: "IX_Investments_InvestorId",
                 table: "Investments",
                 column: "InvestorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_TransactionReference",
+                table: "Transactions",
+                column: "TransactionReference",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_FromWalletId",

@@ -12,8 +12,6 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
 
         builder.Property(t => t.InvestorId)
             .IsRequired();
-            
-
 
         builder.Property(t => t.FromWalletId)
             .IsRequired();
@@ -40,6 +38,11 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
 
         builder.Property(t => t.TransactionReference)
             .IsRequired()
-            .HasMaxLength(20);
+            .HasMaxLength(50);
+
+        // Unique constraint for TransactionReference
+        builder.HasIndex(t => t.TransactionReference)
+            .IsUnique()
+            .HasDatabaseName("IX_Transaction_TransactionReference");
     }
 }

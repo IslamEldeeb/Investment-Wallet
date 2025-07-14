@@ -3,10 +3,10 @@ using DinarInvestments.Domain.Shared;
 
 namespace DinarInvestments.Domain.Models;
 
-public class Investment : ModelBase
+public class Investment : BaseModel<long>
 {
     public long InvestorId { get; private set; }
-    public long InvestmentOpportunityId { get; private set; }
+    public int InvestmentOpportunityId { get; private set; }
     public decimal Amount { get; private set; }
     public InvestmentStatus Status { get; private set; }
 
@@ -16,7 +16,7 @@ public class Investment : ModelBase
     {
     }
 
-    private Investment(long investorId, long investmentOpportunityId, decimal amount)
+    private Investment(long investorId, int investmentOpportunityId, decimal amount)
     {
         InvestorId = investorId;
         InvestmentOpportunityId = investmentOpportunityId;
@@ -24,10 +24,10 @@ public class Investment : ModelBase
         Status = InvestmentStatus.Pending;
     }
 
-    public static Investment Create(long investorId, long investmentOpportunityId, decimal amount)
+    public static Investment Create(long investorId, int investmentOpportunityId, decimal amount)
     {
         Guard.AssertArgumentNotLessThanOrEqualToZero<long>(investorId, nameof(investorId));
-        Guard.AssertArgumentNotLessThanOrEqualToZero<long>(investmentOpportunityId,
+        Guard.AssertArgumentNotLessThanOrEqualToZero<int>(investmentOpportunityId,
             nameof(investmentOpportunityId));
         Guard.AssertArgumentNotLessThanOrEqualToZero<decimal>(amount, nameof(amount));
 
