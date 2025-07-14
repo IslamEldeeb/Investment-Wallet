@@ -55,7 +55,7 @@ namespace DinarInvestments.Infrastructure.Migrations
                     Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     TransactionReference = table.Column<string>(type: "text", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime", nullable: false)
+                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
